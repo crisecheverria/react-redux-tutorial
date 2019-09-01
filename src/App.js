@@ -1,26 +1,57 @@
 import React from 'react';
-import logo from './logo.svg';
+import { connect } from 'react-redux';
 import './App.css';
 
-function App() {
+import 'bulma/css/bulma.min.css';
+
+function App(props) {
+  const { expensesItems, handleAddExpense } = props;
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="container">
+      <button onClick={handleAddExpense} className="button is-primary">
+        Add Expense
+      </button>
+      <table className="table">
+        <thead>
+          <tr>
+            <th>id</th>
+            <th>Amount</th>
+            <th>Description</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {expensesItems.map(item => (
+            <tr key={item.id}>
+              <td>{item.id}</td>
+              <td>{item.amount}</td>
+              <td>{item.description}</td>
+              <td>
+                <button className="button is-danger">X</button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }
 
-export default App;
+const mapStateToProps = state => state;
+const mapDispatchToProps = dispatch => {
+  const newExpense = {
+    id: 4,
+    amount: 12.5,
+    description: 'Coca-cola'
+  };
+
+  return {
+    handleAddExpense: () =>
+      dispatch({ type: 'ADD_EXPENSE', payload: newExpense })
+  };
+};
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(App);
